@@ -30,17 +30,17 @@ ${pathway}Input/Script/bin/plink \
     --clump-p1 1 \
     --clump-r2 0.1 \
     --clump-kb 250 \
-    --clump ${Outputbasedata}"$phenoarray"_48/finalBase.txt \
+    --clump ${Outputbasedata}"$phenoarray"_200/finalBase.txt \
     --clump-snp-field SNP \
     --clump-field P \
     --out ${OutputPRS}$phenoarray/clump #output: blahblah.clump
 awk 'NR!=1{print $3}' ${OutputPRS}$phenoarray/clump.clumped >  ${OutputPRS}$phenoarray/clumped.snp
 
   # Prs & p-val thresholding
-awk '{print $2,$9}' ${Outputbasedata}"$phenoarray"_48/finalBase.txt > ${OutputPRS}$phenoarray/SNP.pvalue
+awk '{print $2,$9}' ${Outputbasedata}"$phenoarray"_200/finalBase.txt > ${OutputPRS}$phenoarray/SNP.pvalue
 ${pathway}Input/Script/bin/plink \
     --bfile ${pathway}Output/TargetData/finalTarget \
-    --score ${Outputbasedata}"$phenoarray"_48/finalBase.txt 2 4 11 header \
+    --score ${Outputbasedata}"$phenoarray"_200/finalBase.txt 2 4 11 header \
     --q-score-range range_list ${OutputPRS}$phenoarray/SNP.pvalue \
     --extract ${OutputPRS}$phenoarray/clumped.snp \
     --out ${OutputPRS}$phenoarray/pval_th  #output: blahblah.profile
