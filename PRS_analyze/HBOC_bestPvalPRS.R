@@ -10,9 +10,9 @@ library(matrixStats)
 
 setwd('/Users/kenny/Desktop/Laptop_input')
 
-urPhen <- "HBOC" # Type phenotype here
-phenotype <- read.table("/Users/kenny/Desktop/Laptop_input/HBOC_24_target.txt", header=T) %>%
-  mutate(HBOC = HBOC - 1)
+urPhen <- "HBOC_22" # Type phenotype here
+phenotype <- read.table("/Users/kenny/Desktop/Laptop_input/HBOC_22_target.txt", header=T) %>%
+  mutate(HBOC_22 = HBOC_22 - 1)
 
 # Scree plot -> choose principle componets #################
 tiff(filename = "/Users/kenny/Desktop/Laptop_output/screeplot.tiff",height=6, width=8,units='in', res=600)
@@ -55,7 +55,7 @@ for(i in p.threshold){
   #prs.coef <- model$coeff["SCORE",]
   prs.coef <- summary(model)$coeff["SCORE",]
   prs.result %<>% rbind(.,
-                        data.frame(Threshold=i, R2=prs.r2,
+                        data.frame(Threshold=i, R2=model.r2,
                                    P=as.numeric(prs.coef[4]),
                                    BETA=as.numeric(prs.coef[1]),
                                    SE=as.numeric(prs.coef[2])))
@@ -159,3 +159,4 @@ text(x=imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_pr
 }
 
 dev.off()
+
