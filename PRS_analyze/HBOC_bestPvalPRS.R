@@ -7,6 +7,7 @@ library(ggplot2)
 library(dplyr)
 library(stats)
 library(matrixStats)
+library(broom)
 
 setwd('/Users/kenny/Desktop/Laptop_input')
 
@@ -35,30 +36,25 @@ pheno <- pheno[,c(1:5)] # 2 PC
 # linear model 改用 logistic regression model
 # 人口組成（PCs）和pheno相關性
 #pheno[,!colnames(pheno)%in%c("FID","IID")]
-null.r2 <- summary(lm(mypheno~., data=pheno[,!colnames(pheno)%in%c("FID","IID")]))$r.squared
+#null.r2 <- summary(lm(mypheno~., data=pheno[,!colnames(pheno)%in%c("FID","IID")]))$r.squared
 prs.result <- NULL
 p.threshold <- c(0.001,0.005,0.01,0.05,0.1,0.2,0.3,0.4,0.5)
 for(i in p.threshold){
-  pheno.prs <- paste0('/Users/kenny/Desktop/Laptop_input/FinalResults/',urPhen,"/pval_th.", i, ".profile") %>%
+  pheno.prs <- paste0('/Users/kenny/Desktop/Laptop_input/FinalResults/HBOC/pval_th.', i, ".profile") %>%
     fread(.) %>%
     .[,c("FID", "IID", "SCORE")] %>%
     merge(., pheno, by=c("FID", "IID"))
   pheno.prs<-data.frame(pheno.prs)
   # prs分數跟pheno相關性
-  #model<-glm(mypheno~.,family=binomial(link="logit"), data=pheno.prs[,!colnames(pheno)%in%c("FID","IID")])%>% summary
-  model<-glm(mypheno~.,family=binomial(link="logit"), data=pheno.prs[,!colnames(pheno)%in%c("FID","IID")])
-  nullmod <- glm(mypheno~1,family=binomial(link="logit"), data=pheno.prs[,!colnames(pheno)%in%c("FID","IID")])
-
-  1-logLik(model)/logLik(nullmod)
-  model.r2 <- 1-logLik(model)/logLik(nullmod)
-  prs.r2 <- model.r2-null.r2
-  #prs.coef <- model$coeff["SCORE",]
+  model<-glm(mypheno ~ SCORE, family = binomial, data = pheno.prs)
+  pR2 <- glance(model) %>%
+    summarize(pR2 = 1 - deviance/null.deviance)
   prs.coef <- summary(model)$coeff["SCORE",]
   prs.result %<>% rbind(.,
-                        data.frame(Threshold=i, R2=model.r2,
-                                   P=as.numeric(prs.coef[4]),
-                                   BETA=as.numeric(prs.coef[1]),
-                                   SE=as.numeric(prs.coef[2])))
+                        data.frame(Threshold = i, R2 = pR2,
+                                   P = as.numeric(prs.coef[4]),
+                                   BETA = as.numeric(prs.coef[1]),
+                                   SE = as.numeric(prs.coef[2])))
 }
 print(prs.result[which.max(prs.result$R2),])
 bestCutOff <- prs.result[which.max(prs.result[-1,2])+1,]$Threshold # 不考慮0.001
@@ -67,7 +63,7 @@ prs.result
 write.table(paste(urPhen,bestCutOff), file=paste0("/Users/kenny/Desktop/Laptop_output/",urPhen,'_BestPval.txt'), sep="\t", quote=F,row.names=F, col.names=F)
 
 # prs density plot (雙峰圖)
-res <- read.table(paste0('/Users/kenny/Desktop/Laptop_input/FinalResults/',urPhen,"/pval_th.",bestCutOff,".profile"), header=T)
+res <- read.table(paste0("/Users/kenny/Desktop/Laptop_input/FinalResults/HBOC/pval_th.",bestCutOff,".profile"), header=T)
 p <- phenotype
 p2 <- select(p,FID,IID,urPhen)
 colnames(p2)[3] <-'mypheno'
@@ -83,7 +79,6 @@ gd<-ggdensity(da2, x = "Standardized_PRS_Score",
    color = "urPhen", fill = "urPhen",
    palette = c("#FC4E07", "#0073C2FF"))+theme(legend.title=element_blank()) + ggtitle(urPhen)
 ggsave(plot=gd, filename=paste0("/Users/kenny/Desktop/Laptop_output/OutputImage/",urPhen,"_DensityPlot.tiff"), height = 4, width = 6)
-
 
 ## ---------------------------------------------------------------------------------------------#
 # --------------------------------------------------------------------------------------------- #

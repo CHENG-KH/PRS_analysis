@@ -10,4 +10,4 @@ sort -k11,11 -n ${finalBase}finalBase.txt > ${finalBase}finalBase_sort.txt
 sed '/NA/d' ${finalBase}finalBase_sort.txt > ${finalBase}finalBase_sort_noNA.txt
 
 # Extract top 100
- head -n 101 ${finalBase}finalBase_sort_noNA.txt > ${finalBase}HBOC_effect_logOR.txt
+head -n 101 ${finalBase}finalBase_sort_noNA.txt > ${finalBase}HBOC_effect_logOR.txt
