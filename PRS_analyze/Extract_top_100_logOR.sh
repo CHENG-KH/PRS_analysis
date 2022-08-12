@@ -1,4 +1,4 @@
-
+#!/bin/bash
 finalBase='/staging2/reserve/flagship/u3121714/kenny/Output/Basedata/HBOC_200/'
 
 #============================以下不要動===============================
