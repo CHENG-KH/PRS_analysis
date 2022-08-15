@@ -11,9 +11,9 @@ library(broom)
 
 setwd('/Users/kenny/Desktop/Laptop_input')
 
-urPhen <- "HBOC_22" # Type phenotype here
-phenotype <- read.table("/Users/kenny/Desktop/Laptop_input/HBOC_22_target.txt", header=T) %>%
-  mutate(HBOC_22 = HBOC_22 - 1)
+urPhen <- "HBOC_25" # Type phenotype here
+phenotype <- read.table("/Users/kenny/Desktop/Laptop_input/HBOC_25_target.txt", header=T) %>%
+  mutate(HBOC_25 = HBOC_25 - 1)
 
 # Scree plot -> choose principle componets #################
 tiff(filename = "/Users/kenny/Desktop/Laptop_output/screeplot.tiff",height=6, width=8,units='in', res=600)
@@ -39,6 +39,7 @@ pheno <- pheno[,c(1:5)] # 2 PC
 #null.r2 <- summary(lm(mypheno~., data=pheno[,!colnames(pheno)%in%c("FID","IID")]))$r.squared
 prs.result <- NULL
 p.threshold <- c(0.001,0.005,0.01,0.05,0.1,0.2,0.3,0.4,0.5)
+
 for(i in p.threshold){
   pheno.prs <- paste0('/Users/kenny/Desktop/Laptop_input/FinalResults/HBOC/pval_th.', i, ".profile") %>%
     fread(.) %>%
@@ -46,15 +47,20 @@ for(i in p.threshold){
     merge(., pheno, by=c("FID", "IID"))
   pheno.prs<-data.frame(pheno.prs)
   # prs分數跟pheno相關性
-  model<-glm(mypheno ~ SCORE, family = binomial, data = pheno.prs)
-  pR2 <- glance(model) %>%
-    summarize(pR2 = 1 - deviance/null.deviance)
+  #model<-glm(mypheno~.,family=binomial(link="logit"), data=pheno.prs[,!colnames(pheno)%in%c("FID","IID")])%>% summary
+  model<-glm(mypheno~.,family=binomial(link="logit"), data=pheno.prs[,!colnames(pheno)%in%c("FID","IID")])
+  nullmod <- glm(mypheno~1,family=binomial(link="logit"), data=pheno.prs[,!colnames(pheno)%in%c("FID","IID")])
+  
+  1-logLik(model)/logLik(nullmod)
+  model.r2 <- 1-logLik(model)/logLik(nullmod)
+  #prs.r2 <- model.r2-null.r2
+  #prs.coef <- model$coeff["SCORE",]
   prs.coef <- summary(model)$coeff["SCORE",]
   prs.result %<>% rbind(.,
-                        data.frame(Threshold = i, R2 = pR2,
-                                   P = as.numeric(prs.coef[4]),
-                                   BETA = as.numeric(prs.coef[1]),
-                                   SE = as.numeric(prs.coef[2])))
+                        data.frame(Threshold=i, R2=model.r2,
+                                   P=as.numeric(prs.coef[4]),
+                                   BETA=as.numeric(prs.coef[1]),
+                                   SE=as.numeric(prs.coef[2])))
 }
 print(prs.result[which.max(prs.result$R2),])
 bestCutOff <- prs.result[which.max(prs.result[-1,2])+1,]$Threshold # 不考慮0.001

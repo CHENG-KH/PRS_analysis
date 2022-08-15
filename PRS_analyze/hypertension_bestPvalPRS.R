@@ -48,8 +48,6 @@ for(i in p.threshold){
   #model<-glm(mypheno~.,family=binomial(link="logit"), data=pheno.prs[,!colnames(pheno)%in%c("FID","IID")])%>% summary
   model<-glm(mypheno~.,family=binomial(link="logit"), data=pheno.prs[,!colnames(pheno)%in%c("FID","IID")])
   nullmod <- glm(mypheno~1,family=binomial(link="logit"), data=pheno.prs[,!colnames(pheno)%in%c("FID","IID")])
-
-  1-logLik(model)/logLik(nullmod)
   model.r2 <- 1-logLik(model)/logLik(nullmod)
   #prs.r2 <- model.r2-null.r2
   #prs.coef <- model$coeff["SCORE",]
