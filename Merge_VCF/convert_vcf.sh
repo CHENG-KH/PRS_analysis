@@ -15,5 +15,5 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 	# Remove indels
 	${tool}vcftools --vcf "${Input_dir}${line}".vcf --remove-indels --recode --recode-INFO-all --out ${Input_dir}${line}
   # Convert VCF4.1 to VCF4.2
-  cat "${Input_dir}${line}".recode.vcf | ${tool}vcf-convert -v 4.2 > ${convert_dir}${line}
+  cat "${Input_dir}${line}".recode.vcf | ${tool}vcf-convert -v 4.2 > ${convert_dir}${line}.vcf
 done < ${Input_dir}${filename}
