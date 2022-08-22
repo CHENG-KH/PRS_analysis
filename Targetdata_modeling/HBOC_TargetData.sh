@@ -3,8 +3,8 @@
 # tools in ${pathway}Input/Script/bin/
 ### Important!!!! Make sure the chr = 1 or chr1
 pathway='/staging2/reserve/flagship/u3121714/kenny/'
-phenoarray=HBOC_22
-merge_dir='/staging2/reserve/flagship/u3121714/kenny/Input/TargetData/hg38/HBOC_22/VCF_merge/'
+phenoarray=HBOC_50
+merge_dir='/staging2/reserve/flagship/u3121714/kenny/Input/TargetData/hg38/HBOC_50/VCF_merge/'
 #===========================================================
 cd ${pathway}Output
 mkdir TargetData
