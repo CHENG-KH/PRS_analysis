@@ -11,9 +11,9 @@ library(broom)
 
 setwd('/Users/kenny/Desktop/Laptop_input')
 
-urPhen <- "HBOC_25" # Type phenotype here
-phenotype <- read.table("/Users/kenny/Desktop/Laptop_input/HBOC_25_target.txt", header=T) %>%
-  mutate(HBOC_25 = HBOC_25 - 1)
+urPhen <- "HBOC_50" # Type phenotype here
+phenotype <- read.table("/Users/kenny/Desktop/Laptop_input/HBOC_50_target.txt", header=T) %>%
+  mutate(HBOC_50 = HBOC_50 - 1)
 
 # Scree plot -> choose principle componets #################
 tiff(filename = "/Users/kenny/Desktop/Laptop_output/screeplot.tiff",height=6, width=8,units='in', res=600)

@@ -4,8 +4,8 @@
 # case and control txt file in ${pathway}Input/Laptop_input/
 ### Important!!!! Make sure the chr = 1 or chr1
 pathway='/staging2/reserve/flagship/u3121714/kenny/'
-phenoarray=HBOC_175
-merge_dir='/staging2/reserve/flagship/u3121714/kenny/Input/BaseData/hg38/HBOC_175/VCF_merge/'
+phenoarray=HBOC_110
+merge_dir='/staging2/reserve/flagship/u3121714/kenny/Input/BaseData/hg38/HBOC_110/VCF_merge/'
 
 #===========================================================
 # Input case and contol txt

@@ -1,11 +1,11 @@
 #!/bin/bash
 filename='HBOC_base.list'
-current_dir='/staging2/reserve/flagship/u3121714/kenny/Input/BaseData/hg38/HBOC_200/VCF/'
+current_dir='/staging2/reserve/flagship/u3121714/kenny/Input/BaseData/hg38/HBOC_110/convert_vcf/'
 
 cd ${current_dir}
 
 ## Check for dir, if not found create it using the mkdir ##
-create_dir="/staging2/reserve/flagship/u3121714/kenny/Input/BaseData/hg38/HBOC_200/recode_vcf/"
+create_dir="/staging2/reserve/flagship/u3121714/kenny/Input/BaseData/hg38/HBOC_110/recode_vcf/"
 [ ! -d "$create_dir" ] && mkdir -p "$create_dir"
 output_path=${create_dir}
 
@@ -24,15 +24,15 @@ done < $filename
 
 
 #Merge all VCF
-merge_filename='merge_HBOC_200.list'
+merge_filename='merge_HBOC_110.list'
 
 ## Check for dir, if not found create it using the mkdir ##
-merge_dir='/staging2/reserve/flagship/u3121714/kenny/Input/BaseData/hg38/HBOC_200/VCF_merge/'
+merge_dir='/staging2/reserve/flagship/u3121714/kenny/Input/BaseData/hg38/HBOC_110/VCF_merge/'
 [ ! -d "$merge_dir" ] && mkdir -p "$merge_dir"
 merge_output_path=${merge_dir}
 
 disease='HBOC'
-Amount_of_Samples='200'
+Amount_of_Samples='110'
 
 # move.log file to log file
 cd ${create_dir}
@@ -54,8 +54,8 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 done < ${merge_filename}
 
 # Build list for merging, with route and .gz in the end
-sed -e 's/^H010/\/staging2\/reserve\/flagship\/u3121714\/kenny\/Input\/BaseData\/hg38\/HBOC_200\/recode_vcf\/H010/' -i ${create_dir}${merge_filename}
-sed -e 's/^HWGS/\/staging2\/reserve\/flagship\/u3121714\/kenny\/Input\/BaseData\/hg38\/HBOC_200\/recode_vcf\/HWGS/' -i ${create_dir}${merge_filename}
+sed -e 's/^H010/\/staging2\/reserve\/flagship\/u3121714\/kenny\/Input\/BaseData\/hg38\/HBOC_110\/recode_vcf\/H010/' -i ${create_dir}${merge_filename}
+sed -e 's/^HWGS/\/staging2\/reserve\/flagship\/u3121714\/kenny\/Input\/BaseData\/hg38\/HBOC_110\/recode_vcf\/HWGS/' -i ${create_dir}${merge_filename}
 sed -e 's/$/.gz/' -i ${create_dir}${merge_filename}
 
 #Merge VCF.gz
