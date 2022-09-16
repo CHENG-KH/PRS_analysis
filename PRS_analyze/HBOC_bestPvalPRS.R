@@ -165,7 +165,6 @@ text(x=imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_pr
 
 dev.off()
 
-SNP_pvalue <- read.table(paste0("/Users/kenny/Desktop/Laptop_input/FinalResults/HBOC/SNP.pvalue"), header=T)
 SNP_p_0.01 <- read.table(paste0("/Users/kenny/Desktop/Laptop_input/SNP_p_0.01.txt"), col.names = c("CHR", "POS", "P", "EFFECT SIZE"), header=F)
 write.table(SNP_p_0.01, file = "/Users/kenny/Desktop/SNP_p_0.01.txt", sep="\t", col.names = TRUE)
 
