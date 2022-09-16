@@ -11,9 +11,9 @@ library(broom)
 
 setwd('/Users/kenny/Desktop/Laptop_input')
 
-urPhen <- "HBOC_50" # Type phenotype here
-phenotype <- read.table("/Users/kenny/Desktop/Laptop_input/HBOC_50_target.txt", header=T) %>%
-  mutate(HBOC_50 = HBOC_50 - 1)
+urPhen <- "HBOC_30" # Type phenotype here
+phenotype <- read.table("/Users/kenny/Desktop/Laptop_input/HBOC_30_target.txt", header=T) %>%
+  mutate(HBOC_30 = HBOC_30 - 1)
 
 # Scree plot -> choose principle componets #################
 tiff(filename = "/Users/kenny/Desktop/Laptop_output/screeplot.tiff",height=6, width=8,units='in', res=600)
@@ -100,28 +100,30 @@ Addcolors = densCols(imiss_het$F_MISS,imiss_het$Het_propo)
 
 tiff(filename = '/Users/kenny/Desktop/Laptop_output/OutputImage/QCplot/indQCplot_base.tiff',height=6, width=8,units='in', res=600)
 
-indQCplot<-plot(imiss_het$F_MISS,imiss_het$Het_propo, col=Addcolors,pch=20,
-     xlim=c(0,0.06),
-     ylim=c(0.18,0.212),
+indQCplot <- plot(imiss_het$F_MISS, imiss_het$Het_propo, col = Addcolors, pch = 20,
+     xlim = c(0, 0.06),
+     ylim = c(0.01, 0.06),
      #ylim=c(0.1,0.35),
      xlab="Missing rate", ylab="Heterozygosity rate", axes=FALSE, cex.lab=1.3, cex.axis=1.3, cex.main=1.3)
 axis(2,tick=T) #2, left. t, tickmarks
 axis(1,tick=T) #1, below
-legend("bottomright", legend="Genotypes_missing_het", pch=16, bty="n", col = Addcolors)
+legend("bottomright", legend = "Genotypes_missing_het", pch = 16, bty="n", col = Addcolors)
 
-abline(h=mean(imiss_het$Het_propo)-
-         (3*sd(imiss_het$Het_propo)),col="RED",lty=2)
-abline(h=mean(imiss_het$Het_propo)
-       +(3*sd(imiss_het$Het_propo)),col="RED",lty=2)
+##Heterozygosity 3 sd Thresholds (Horizontal Line)
+m1 <- mean(imiss_het$Het_propo)-(3*sd(imiss_het$Het_propo))
+m2 <- mean(imiss_het$Het_propo)+(3*sd(imiss_het$Het_propo))
+
+abline(h = m1, col="RED", lty=2)
+abline(h = m2, col="RED", lty=2)
 ##Missing Data Thresholds (Vertical Line)
 abline(v=0.03, col="BLUE", lty=2) # THRESHOLD=missing_rate
-title("Distribution of missing and heterozygosity rate")
+title("Distribution of missing and heterozygosity rate in base data")
 
-m1<-mean(imiss_het$Het_propo)-(3*sd(imiss_het$Het_propo))
-m2<-mean(imiss_het$Het_propo)+(3*sd(imiss_het$Het_propo))
+
+
 
 if (length(imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_propo<m1,'FID'])!=0){
-text(x=imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_propo<m1,'F_MISS' ],y=imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_propo<m1,'Het_propo' ],labels=imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_propo<m1,'FID'],cex=0.9, font=2, pos=4)
+text(x=imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_propo<m1,'F_MISS' ],y=imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_propo<m1,'Het_propo' ],labels=imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_propo<m1,'FID'],cex = 0.5, font = 2, pos = 4)
 }
 dev.off()
 
@@ -137,27 +139,41 @@ Addcolors = densCols(imiss_het$F_MISS,imiss_het$Het_propo)
 tiff(filename = '/Users/kenny/Desktop/Laptop_output/OutputImage/QCplot/indQCplot_target.tiff',height=6, width=8,units='in', res=600)
 
 indQCplot<-plot(imiss_het$F_MISS,imiss_het$Het_propo, col=Addcolors,pch=20,
-     xlim=c(0,0.06),
-     ylim=c(0.18,0.212),
+     xlim=c(0, 0.06),
+     ylim=c(0.05, 0.2),
      #ylim=c(0.1,0.35),
      xlab="Missing rate", ylab="Heterozygosity rate", axes=FALSE, cex.lab=1.3, cex.axis=1.3, cex.main=1.3)
 axis(2,tick=T) #2, left. t, tickmarks
 axis(1,tick=T) #1, below
 legend("bottomright", legend="Genotypes_missing_het", pch=16, bty="n", col = Addcolors)
-abline(h=mean(imiss_het$Het_propo)-
-         (3*sd(imiss_het$Het_propo)),col="RED",lty=2)
-abline(h=mean(imiss_het$Het_propo)
-       +(3*sd(imiss_het$Het_propo)),col="RED",lty=2)
+
+##Heterozygosity 3 sd Thresholds (Horizontal Line)
+m1 <- mean(imiss_het$Het_propo) - (3*sd(imiss_het$Het_propo))
+m2 <- mean(imiss_het$Het_propo) + (3*sd(imiss_het$Het_propo))
+
+abline(h = m1, col = "RED",lty = 2)
+abline(h = m2, col = "RED",lty = 2)
+
 ##Missing Data Thresholds (Vertical Line)
 abline(v=0.03, col="BLUE", lty=2) # THRESHOLD=missing_rate
-title("Distribution of missing and heterozygosity rate")
+title("Distribution of missing and heterozygosity rate in test data")
 
-m1<-mean(imiss_het$Het_propo)-(3*sd(imiss_het$Het_propo))
-m2<-mean(imiss_het$Het_propo)+(3*sd(imiss_het$Het_propo))
 
 if (length(imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_propo<m1,'FID'])!=0){
-text(x=imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_propo<m1,'F_MISS' ],y=imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_propo<m1,'Het_propo' ],labels=imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_propo<m1,'FID'],cex=0.9, font=2, pos=4)
+text(x=imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_propo<m1,'F_MISS' ],y=imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_propo<m1,'Het_propo' ],labels=imiss_het[imiss_het$F_MISS>0.03 |imiss_het$Het_propo>m2 |imiss_het$Het_propo<m1,'FID'],cex=0.5, font=2, pos=4)
 }
 
 dev.off()
 
+SNP_pvalue <- read.table(paste0("/Users/kenny/Desktop/Laptop_input/FinalResults/HBOC/SNP.pvalue"), header=T)
+SNP_p_0.01 <- read.table(paste0("/Users/kenny/Desktop/Laptop_input/SNP_p_0.01.txt"), col.names = c("CHR", "POS", "P", "EFFECT SIZE"), header=F)
+write.table(SNP_p_0.01, file = "/Users/kenny/Desktop/SNP_p_0.01.txt", sep="\t", col.names = TRUE)
+
+
+SNP_p_0.01_chr13 <- SNP_p_0.01 %>%
+  filter(CHR == 13) %>%
+  filter(POS > 18445862 & POS < 114327173)
+
+SNP_p_0.01_chr17 <- SNP_p_0.01 %>%
+  filter(CHR == 17) %>%
+  filter(POS > 36449220 & POS < 75053130)
